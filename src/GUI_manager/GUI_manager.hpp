@@ -1,7 +1,7 @@
-#ifndef GUI_H
-#define GUI_H
+#ifndef GUI_MAN_H
+#define GUI_MAN_H
 
-#include <Wire.h>
+//#include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SH110X.h>
 
@@ -11,4 +11,4 @@ namespace GUI {
   void redraw();
 }
 
-#endif //GUI_H  
+#endif //GUI_MAN_H  

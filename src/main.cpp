@@ -1,10 +1,9 @@
 #include <Arduino.h>
-#include "bitmaps/bitmaps.hpp"
 #include "GUI_manager/GUI_manager.hpp"
+#include "GPS_manager/GPS_manager.hpp"
 
 void setup()   {
-  Serial.begin(9600);  
-  GUI::init();
+
 }
 
 
