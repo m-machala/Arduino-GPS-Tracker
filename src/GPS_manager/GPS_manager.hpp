@@ -25,6 +25,11 @@ namespace GPS_MAN {
    */
    bool update();
 
+  /*
+    get the fix property
+  */
+   bool fix();
+
    /*
      get number of satellites the module is communicating with
    */
@@ -48,14 +53,18 @@ namespace GPS_MAN {
    /*
      get time in a format ready to be displayed
      HH:MM
+     buffer - an array of chars with the size of 7+
+     size - size of buffer
    */
-   char* getTimeReadable();
+   void getTimeReadable(char* buffer, int size);
 
    /*
      get date in a format ready to be displayed
      DD.MM.YY
+     buffer - an array of chars with the size of 7+
+     size - size of buffer
    */
-   char* getDateReadable();
+   void getDateReadable(char* buffer, int size);
 }
 
 #endif //GPS_H  
