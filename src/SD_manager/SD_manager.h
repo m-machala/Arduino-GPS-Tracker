@@ -31,10 +31,8 @@ namespace SD_MAN {
 
     /*
         closes a file
-        true - file closed successfully
-        false - error
     */
-    bool closeFile();
+    void closeFile();
 
     /*
         moves an amount of bytes from the start of a file
@@ -45,9 +43,6 @@ namespace SD_MAN {
         moves an amount of bytes from the end of a file
     */
     void seekBack(uint32_t bytes);
-
-
-
 }
 
 #endif //GUI_MAN_H
