@@ -1,4 +1,4 @@
-#include "SD_manager.h"
+#include "SD_manager.hpp"
 
 bool SD_MAN::init() {
     // pin connected to CS
