@@ -37,7 +37,7 @@ namespace SD_MAN {
     /*
         closes a file
     */
-    void closeFile();
+    void fileClose();
 
     /*
         moves an amount of bytes from the start of a file

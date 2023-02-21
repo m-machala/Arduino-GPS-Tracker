@@ -19,7 +19,7 @@ void SD_MAN::fileFlush() {
     currentFile.flush();
 }
 
-void SD_MAN::closeFile() {
+void SD_MAN::fileClose() {
     currentFile.close();
 }
 
@@ -28,5 +28,5 @@ void SD_MAN::seek(uint32_t bytes) {
 }
 
 void SD_MAN::seekBack(uint32_t bytes) {
-    currentFile.seek(currentFile.size() - bytes);
+    currentFile.seek(currentFile.size() - (bytes + 2));
 }
