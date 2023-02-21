@@ -22,12 +22,17 @@ namespace SD_MAN {
         true - file opened/created successfully
         false - error
     */
-    bool openFileWrite(char* fileName);
+    bool openFileWrite(const char* fileName);
 
     /*
         appends a new line to the file
     */
-    void fileWrite(char* text);
+    void fileWrite(const char* text);
+
+    /*
+        ensures file is written to
+    */
+    void fileFlush();
 
     /*
         closes a file

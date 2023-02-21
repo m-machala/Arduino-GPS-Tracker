@@ -1,20 +1,22 @@
 #include "SD_manager.h"
 
-static File currentFile;
-
 bool SD_MAN::init() {
     // pin connected to CS
     return SD.begin(53);
 }
 
-bool SD_MAN::openFileWrite(char* fileName) {
-    currentFile = SD.open(fileName, FILE_WRITE);
+bool SD_MAN::openFileWrite(const char* fileName) {
+    currentFile = SD.open(fileName, O_WRITE | O_CREAT | O_TRUNC);
     if(currentFile) return true;
     return false;
 }
 
-void SD_MAN::fileWrite(char* text) {
+void SD_MAN::fileWrite(const char* text) {
     currentFile.println(text);
+}
+
+void SD_MAN::fileFlush() {
+    currentFile.flush();
 }
 
 void SD_MAN::closeFile() {
