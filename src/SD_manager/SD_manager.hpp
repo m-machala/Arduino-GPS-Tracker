@@ -40,6 +40,11 @@ namespace SD_MAN {
     void fileClose();
 
     /*
+        tests if a file with a given name exists
+    */
+    bool fileExists(char* fileName);
+
+    /*
         moves an amount of bytes from the start of a file
     */
     void seek(uint32_t bytes);

@@ -4,13 +4,15 @@
 namespace GPX_GEN {
     /*
         generates a skeleton for a GPX track
-        output - amount of bytes needed to reach the center from end, returns 0 if there is th buffer is too small
+        buffer size should be at least 250
+        output - amount of bytes needed to reach the center from end, returns 0 if there is the buffer is too small
 
     */
-    int generateSkeleton(char* buffer, int bufferSize, char* creator, char* trackName);
+    int generateSkeleton(char* buffer, int bufferSize, const char* creator, const char* trackName);
 
     /*
         generates a trackpoint
+        buffer size should be at least 150
         true - buffer filled successully
         false - buffer too small
     */

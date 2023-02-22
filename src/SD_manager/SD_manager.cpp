@@ -23,6 +23,10 @@ void SD_MAN::fileClose() {
     currentFile.close();
 }
 
+bool SD_MAN::fileExists(char* fileName) {
+    return SD.exists(fileName);
+}
+
 void SD_MAN::seek(uint32_t bytes) {
     currentFile.seek(bytes);
 }
