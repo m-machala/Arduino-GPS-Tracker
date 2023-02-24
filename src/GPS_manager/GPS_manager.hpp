@@ -49,22 +49,6 @@ namespace GPS_MAN {
      get altitude of GPS
    */
    float getAlt();
-
-   /*
-     get time in a format ready to be displayed
-     HH:MM
-     buffer - an array of chars with the size of 7+
-     size - size of buffer
-   */
-   void getTimeReadable(char* buffer, int size);
-
-   /*
-     get date in a format ready to be displayed
-     DD.MM.YY
-     buffer - an array of chars with the size of 7+
-     size - size of buffer
-   */
-   void getDateReadable(char* buffer, int size);
 }
 
 #endif //GPS_H  

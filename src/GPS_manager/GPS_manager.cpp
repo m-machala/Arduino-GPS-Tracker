@@ -42,31 +42,3 @@ float GPS_MAN::getLat() {
 float GPS_MAN::getAlt() {
     return GPS.altitude;
 }
-
-void GPS_MAN::getTimeReadable(char* buffer, int size) {
-    if(size < 6) {
-        return;
-    }
-
-    char* time = "00:00";
-    time[0] = '0' + GPS.hour / 10;
-    time[1] = '0' + GPS.hour % 10;
-    time[3] = '0' + GPS.minute / 10;
-    time[4] = '0' + GPS.minute % 10;
-    
-    strcpy(buffer, time);
-}
-
-void GPS_MAN::getDateReadable(char* buffer, int size) {
-    if(size < 9) {
-        return;
-    }
-
-    char* date = "00.00.00";
-    date[0] = '0' + GPS.day / 10;
-    date[1] = '0' + GPS.day % 10;
-    date[3] = '0' + GPS.month / 10;
-    date[6] = '0' + GPS.year / 10;
-    date[7] = '0' + GPS.year % 10;
-    strcpy(buffer, '\0');
-}
