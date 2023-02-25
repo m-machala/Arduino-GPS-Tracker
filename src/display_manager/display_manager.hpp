@@ -4,9 +4,13 @@
 #define X_MAX (128)
 #define Y_MAX (64)
 
+#include <Adafruit_GFX.h>
+#include <Adafruit_SH110X.h>
 #include <stdint.h>
 
 namespace DISP_MAN {
+    static Adafruit_SH1106G display;
+
     /*
         initialize display component
     */
@@ -20,7 +24,7 @@ namespace DISP_MAN {
     /*
         clears set area of screen based on rect defined by coordinates
     */
-    void clearRect(int x1, int y1, int x2, int y2);
+    void clearRect(int x, int y, int w, int h);
     
     /*
         prints text at specified coordinates
@@ -28,14 +32,19 @@ namespace DISP_MAN {
     void printText(const char* text, int x, int y);
 
     /*
+        draws a line defined by coordinates
+    */
+    void drawLine(int x1, int y1, int x2, int y2);
+
+    /*
         draws rect defined by coordinates
     */
-    void drawRect(int x1, int y1, int x2, int y2);
+    void drawRect(int x, int y, int w, int h);
 
     /*
         draws bitmap
     */
-    void drawBM(uint8_t* bitmap, int w, int h, int x, int y);
+    void drawBM(int x, int y, int w, int h, uint8_t* bitmap);
 }
 
 #endif //DISP_MAN_H
