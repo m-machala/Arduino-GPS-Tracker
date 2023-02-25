@@ -1,17 +1,21 @@
 #include "display_manager.hpp"
 
-bool DISP_MAN::init() {
-    bool output = false;
-    display = Adafruit_SH1106G(128, 64, &Wire, -1);
-    output = display.begin(0x3c, true); // i2c address
-    display.setTextSize(1);
-    display.setTextColor(SH110X_WHITE);
+Adafruit_SH1106G *DISP_MAN::display = new Adafruit_SH1106G(128, 64, &Wire, -1);
 
+bool DISP_MAN::init() {
+    bool output = display->begin(0x3c, true); // i2c address
+    display->setTextSize(1);
+    display->setTextColor(SH110X_WHITE);
+    display->display(); // shows default splash screen
     return output;
 }
 
+void DISP_MAN::draw() {
+    display->display();
+}
+
 void DISP_MAN::clearScreen() {
-    display.clearDisplay();
+    display->clearDisplay();
 }
 
 void DISP_MAN::clearRect(int x, int y, int w, int h) {
@@ -20,7 +24,7 @@ void DISP_MAN::clearRect(int x, int y, int w, int h) {
     if(y < 0) y = 0;
     if(y >= Y_MAX) y = Y_MAX - 1;
 
-    display.fillRect(x, y, w, h, SH110X_BLACK); // fills area with black color
+    display->fillRect(x, y, w, h, SH110X_BLACK); // fills area with black color
 }
     
 void DISP_MAN::printText(const char* text, int x, int y) {
@@ -29,8 +33,8 @@ void DISP_MAN::printText(const char* text, int x, int y) {
     if(y < 0) y = 0;
     if(y >= Y_MAX) y = Y_MAX - 1;
 
-    display.setCursor(x, y);
-    display.print(text);
+    display->setCursor(x, y);
+    display->print(text);
 }
 
 void DISP_MAN::drawLine(int x1, int y1, int x2, int y2) {
@@ -43,7 +47,7 @@ void DISP_MAN::drawLine(int x1, int y1, int x2, int y2) {
     if(y2 < 0) y2 = 0;
     if(y2 >= Y_MAX) y2 = Y_MAX - 1;
 
-    display.drawLine(x1, y1, x2, y2, SH110X_WHITE);
+    display->drawLine(x1, y1, x2, y2, SH110X_WHITE);
 }
 
 void DISP_MAN::drawRect(int x, int y, int w, int h) {
@@ -52,9 +56,9 @@ void DISP_MAN::drawRect(int x, int y, int w, int h) {
     if(y < 0) y = 0;
     if(y >= Y_MAX) y = Y_MAX - 1;
 
-    display.drawRect(x, y, w, h, SH110X_WHITE);
+    display->drawRect(x, y, w, h, SH110X_WHITE);
 }
 
-void DISP_MAN::drawBM(int x, int y, int w, int h, uint8_t* bitmap) {
-    display.drawBitmap(x, y, bitmap, w, h, SH110X_WHITE);
+void DISP_MAN::drawBM(int x, int y, int w, int h, const uint8_t* bitmap) {
+    display->drawBitmap(x, y, bitmap, w, h, SH110X_WHITE);
 }

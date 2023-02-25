@@ -9,12 +9,16 @@
 #include <stdint.h>
 
 namespace DISP_MAN {
-    static Adafruit_SH1106G display;
-
+    extern Adafruit_SH1106G *display;
     /*
         initialize display component
     */
     bool init();
+
+    /*
+        draws current data to screen
+    */
+    void draw();
 
     /*
         clears all pixels of screen
@@ -44,7 +48,7 @@ namespace DISP_MAN {
     /*
         draws bitmap
     */
-    void drawBM(int x, int y, int w, int h, uint8_t* bitmap);
+    void drawBM(int x, int y, int w, int h, const uint8_t* bitmap);
 }
 
 #endif //DISP_MAN_H
