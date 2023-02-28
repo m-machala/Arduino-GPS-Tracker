@@ -10,7 +10,7 @@ bool POS_LOG::init() {
 }
 
 bool POS_LOG::startLogging(const char* creator, const char* trackName) {
-    int count = 0;
+    uint16_t count = 0;
     char fileName[13] = "0.gpx";
     
     // find the next available file name
@@ -18,7 +18,7 @@ bool POS_LOG::startLogging(const char* creator, const char* trackName) {
         count++;
         sprintf(fileName, "%d.gpx", count);
 
-        if(count > 99999999) {
+        if(count == UINT16_MAX) {
             return false;
         }
     }
