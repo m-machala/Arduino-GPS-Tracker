@@ -34,7 +34,15 @@ void DISP_MAN::printText(const char* text, int x, int y) {
     if(y >= Y_MAX) y = Y_MAX - 1;
 
     display->setCursor(x, y);
-    display->print(text);
+
+    for(int i = 0; i < strlen(text); i++) {
+        if(text[i] == '\n') {
+            y += 8;
+            display->setCursor(x, y);
+            continue;
+        }
+        display->print(text[i]);
+    }
 }
 
 void DISP_MAN::drawLine(int x1, int y1, int x2, int y2) {

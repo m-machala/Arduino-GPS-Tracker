@@ -2,8 +2,8 @@
 #include <stdint.h>
 
 namespace BM {
-  #define BM_Satellite_W (9)
-  #define BM_Satellite_H (9)
+  #define BM_SATELLITE_W (9)
+  #define BM_SATELLITE_H (9)
 
   static const uint8_t PROGMEM satellite[] = {
     0b01110000, 0b00000000,
@@ -38,7 +38,7 @@ namespace BM {
   static const uint8_t PROGMEM exclamation[] = {
     0b00110000,
     0b01111000,
-    0001111000,
+    0b01111000,
     0b01111000,
     0b01111000,
     0b00110000,
@@ -48,7 +48,7 @@ namespace BM {
   };
 
   #define BM_SPLASH_W (41)
-  #define BM_SPLASH_H (21)
+  #define BM_SPLASH_H (20)
 
   static const uint8_t PROGMEM splash[] = {
     0b00001111, 0b11111100, 0b11111111, 0b11001111, 0b11111100, 0b00000000,

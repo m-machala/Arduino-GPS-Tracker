@@ -1,7 +1,7 @@
 #ifndef GUI_MAN_H
 #define GUI_MAN_H
 
-namespace GUI {
+namespace GUI_MAN {
   /*
     initialize display
   */
@@ -50,12 +50,12 @@ namespace GUI {
   /*
     displays screen with info about the current tracking session
   */
-  void trackingScreen(int secondsSinceStart, float latitude, float longitude, int metersTraveled);
+  void trackingScreen(int hours, int minutes, float latitude, float longitude, int kmTraveled, bool paused);
 
   /*
     displays screen with stats ebout ended session
   */
-  void endScreen(int secondsSinceStart, int metersTraveled);
+  void endScreen(int hours, int minutes, int kmTraveled);
 }
 
 #endif //GUI_MAN_H  
