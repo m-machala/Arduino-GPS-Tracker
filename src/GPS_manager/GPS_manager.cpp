@@ -2,10 +2,12 @@
 
 //static Adafruit_GPS GPS(&Serial1);
 
-void GPS_MAN::init() {
-    GPS.begin(9600);
+bool GPS_MAN::init() {
+    bool result = GPS.begin(9600);
     // set update rate to 1Hz
     GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
+
+    return result;
 }
 
 bool GPS_MAN::update() {

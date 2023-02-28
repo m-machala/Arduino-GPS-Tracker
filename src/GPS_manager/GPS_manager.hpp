@@ -16,7 +16,7 @@ namespace GPS_MAN {
   /*
     initialize GPS
   */
-  void init();
+  bool init();
 
    /*
      update GPS data
