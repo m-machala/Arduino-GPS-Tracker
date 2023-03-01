@@ -10,7 +10,7 @@ namespace POS_LOG {
   /*
     generates a .gpx file on the SD card and inserts the GPX skeleton into it
   */
-  bool startLogging(const char* creator, const char* trackName);
+  bool startLogging(const char* creator);
 
   /*
     inserts a trackpoint into the current working .gpx file

@@ -9,7 +9,7 @@ bool POS_LOG::init() {
     return SD_MAN::init();
 }
 
-bool POS_LOG::startLogging(const char* creator, const char* trackName) {
+bool POS_LOG::startLogging(const char* creator) {
     uint16_t count = 0;
     char fileName[13] = "0.gpx";
     
@@ -28,7 +28,9 @@ bool POS_LOG::startLogging(const char* creator, const char* trackName) {
 
     int bufferSize = 250;
     char buffer[bufferSize];
-    seekBackValue = GPX_GEN::generateSkeleton(buffer, bufferSize, creator, trackName);
+    char nameBuffer[50];
+    sprintf(nameBuffer, "GPS Tracker - track %d", count);
+    seekBackValue = GPX_GEN::generateSkeleton(buffer, bufferSize, creator, nameBuffer);
     if(seekBackValue == 0) {
         return false;
     }

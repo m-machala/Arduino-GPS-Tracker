@@ -12,6 +12,7 @@ bool readButton(int button);
 enum State { STARTING, NOFIX, TRACKING, WAITING, ENDING };
 State state = STARTING;
 unsigned long timer = 0;
+char creator[] = "Martin Machala - https://github.com/m-machala";
 
 void setup() {
     if(!GUI_MAN::init()) systemError(); // initialize display, if there is an error, blink LED
@@ -53,7 +54,7 @@ void loop() {
                     GUI_MAN::infoMessage("No GPS signal!\nPlease wait,\nthen try again");
                 }
                 else {
-                    if(!POS_LOG::startLogging()) {
+                    if(!POS_LOG::startLogging(creator)) {
                         GUI_MAN::errorMessage("SD error!");
                         systemError();
                     }
