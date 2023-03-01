@@ -129,8 +129,10 @@ void loop() {
                 break;
 
             case ENDING:
-                if(btn1CurrentState) state = STARTING;
-                GUI_MAN::startScreen();
+                if(btn1CurrentState) {
+                    state = STARTING;
+                    GUI_MAN::startScreen();
+                }
                 break;
 
             default:
