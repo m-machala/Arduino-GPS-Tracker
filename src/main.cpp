@@ -12,6 +12,7 @@ bool readButton(int button);
 enum State { STARTING, NOFIX, TRACKING, WAITING, ENDING };
 State state = STARTING;
 unsigned long timer = 0;
+unsigned long waitTimer = 0;
 unsigned long minutesSinceStart = 0;
 int lastMinutes = 0;
 int kmTraveled = 0;
@@ -21,6 +22,8 @@ float lastLon = 0;
 char creator[] = "Martin Machala - https://github.com/m-machala";
 
 void setup() {
+    Serial.begin(115200);
+    Serial.println("debugging");
     if(!GUI_MAN::init()) systemError(); // initialize display, if there is an error, blink LED
     GUI_MAN::splash(); // show project splash screen
     delay(5000);
@@ -47,89 +50,96 @@ void loop() {
     bool newData = GPS_MAN::update();
     if(newData) {
         GUI_MAN::time(GPS_MAN::getHour(), GPS_MAN::getMinute());
-        GUI_MAN::date(GPS_MAN::getYear(), GPS_MAN::getMonth(), GPS_MAN::getSecond());
+        GUI_MAN::date(GPS_MAN::getYear(), GPS_MAN::getMonth(), GPS_MAN::getDay());
         GUI_MAN::satCount(GPS_MAN::getSats());
     }
 
-    switch(state) {
-        // starting info screen, tests for a button press, if there is no data, show an info screen
-        case STARTING:
-            if(readButton(BTN1)) {
-                // give an info message in case of no GPS data available
-                if(!GPS_MAN::fix()) {
-                    timer = millis();
-                    state = NOFIX;
-                    GUI_MAN::infoMessage("No GPS signal!\nPlease wait,\nthen try again");
-                }
-                else {
-                    if(!POS_LOG::startLogging(creator)) {
-                        GUI_MAN::errorMessage("SD error!");
-                        systemError();
+    if(millis() - timer >= 100) {
+        switch(state) {
+            // starting info screen, tests for a button press, if there is no data, show an info screen
+            case STARTING:
+                if(readButton(BTN1)) {
+                    // give an info message in case of no GPS data available
+                    if(!GPS_MAN::fix()) {
+                        waitTimer = millis();
+                        state = NOFIX;
+                        GUI_MAN::infoMessage("No GPS signal!\nPlease wait,\nthen try again");
                     }
-                    minutesSinceStart = 0;
-                    meters = 0;
-                    kmTraveled = 0;
-                    lastMinutes = GPS_MAN::getMinute() + (GPS_MAN::getHour() * 60);
-                    lastLat = GPS_MAN::getLat();
-                    lastLon = GPS_MAN::getLon();
-                    state = TRACKING;
+                    else {
+                        if(!POS_LOG::startLogging(creator)) {
+                            GUI_MAN::errorMessage("SD error!");
+                            systemError();
+                        }
+                        minutesSinceStart = 0;
+                        meters = 0;
+                        kmTraveled = 0;
+                        lastMinutes = GPS_MAN::getMinute() + (GPS_MAN::getHour() * 60);
+                        lastLat = GPS_MAN::getLat();
+                        lastLon = GPS_MAN::getLon();
+                        state = TRACKING;
+                    }
+                    delay(100);
                 }
-            }
-            break;
+                break;
 
-        // waits for 5 seconds, then goes back to STARTING
-        case NOFIX:
-            if(millis() - timer >= 5000) {
-                state = STARTING;
-                GUI_MAN::startScreen();
-            }
-            break;
+            // waits for 5 seconds, then goes back to STARTING
+            case NOFIX:
+                if(millis() - waitTimer >= 5000) {
+                    state = STARTING;
+                    GUI_MAN::startScreen();
+                    delay(10);
+                }
+                break;
 
-        // tests if new data is available and if fix is available; if yes, log new data
-        case TRACKING: {
-            int currentMinutes = GPS_MAN::getMinute() + (GPS_MAN::getHour() * 60);
-            if(lastMinutes < currentMinutes) {
-                minutesSinceStart = currentMinutes - lastMinutes;
-            }
-            else if(lastMinutes > 1000 && currentMinutes < 500) {
-                int modifiedMinutes = lastMinutes + 1440; // 60 * 24
-                minutesSinceStart = modifiedMinutes - lastMinutes;
-            }
-            lastMinutes = currentMinutes;
-            
-            if(newData && GPS_MAN::fix()) {
-                POS_LOG::addTrackpoint(GPS_MAN::getLon(), GPS_MAN::getLat(), GPS_MAN::getAlt(), GPS_MAN::getYear(), GPS_MAN::getMonth(), GPS_MAN::getDay(), GPS_MAN::getHour(), GPS_MAN::getMinute(), GPS_MAN::getSecond());
-                GUI_MAN::trackingScreen(minutesSinceStart / 60, minutesSinceStart % 60, GPS_MAN::getLat(), GPS_MAN::getLon(), false);
-            }
-            if(readButton(BTN1)) {
-                GUI_MAN::trackingScreen(minutesSinceStart / 60, minutesSinceStart % 60, GPS_MAN::getLat(), GPS_MAN::getLon(), true);
-                state = WAITING;
-            } 
-            break;
-        }   
+            // tests if new data is available and if fix is available; if yes, log new data
+            case TRACKING: {
+                int currentMinutes = GPS_MAN::getMinute() + (GPS_MAN::getHour() * 60);
+                if(lastMinutes < currentMinutes) {
+                    minutesSinceStart = currentMinutes - lastMinutes;
+                }
+                else if(lastMinutes > 1000 && currentMinutes < 500) {
+                    int modifiedMinutes = lastMinutes + 1440; // 60 * 24
+                    minutesSinceStart = modifiedMinutes - lastMinutes;
+                }
+                lastMinutes = currentMinutes;
 
-        // stop tracking, wait until button is pressed to go back to start screen
-        case WAITING:
-            if(readButton(BTN1)) {
-                lastMinutes = GPS_MAN::getMinute() + (GPS_MAN::getHour() * 60);
-                state = TRACKING;
-            }
+                if(newData && GPS_MAN::fix()) {
+                    POS_LOG::addTrackpoint(GPS_MAN::getLat(), GPS_MAN::getLon(), GPS_MAN::getAlt(), GPS_MAN::getYear(), GPS_MAN::getMonth(), GPS_MAN::getDay(), GPS_MAN::getHour(), GPS_MAN::getMinute(), GPS_MAN::getSecond());
+                    GUI_MAN::trackingScreen(minutesSinceStart / 60, minutesSinceStart % 60, GPS_MAN::getLat(), GPS_MAN::getLon(), false);
+                }
+                if(readButton(BTN1)) {
+                    GUI_MAN::trackingScreen(minutesSinceStart / 60, minutesSinceStart % 60, GPS_MAN::getLat(), GPS_MAN::getLon(), true);
+                    state = WAITING;
+                    delay(100);
+                } 
+                break;
+            }   
 
-            if(readButton(BTN2)) {
-                GUI_MAN::endScreen(minutesSinceStart / 60, minutesSinceStart % 60);
-                state = ENDING;
-            }
-            break;
+            // stop tracking, wait until button is pressed to go back to start screen
+            case WAITING:
+                if(readButton(BTN1)) {
+                    lastMinutes = GPS_MAN::getMinute() + (GPS_MAN::getHour() * 60);
+                    state = TRACKING;
+                    delay(100);
+                }
 
-        case ENDING:
-            if(readButton(BTN1)) state = STARTING;
-            break;
+                if(readButton(BTN2)) {
+                    GUI_MAN::endScreen(minutesSinceStart / 60, minutesSinceStart % 60);
+                    state = ENDING;
+                    delay(100);
+                }
+                break;
 
-        default:
-            break;
+            case ENDING:
+                if(readButton(BTN1)) state = STARTING;
+                delay(100);
+                break;
+
+            default:
+                break;
+        }
+        timer = millis();
     }
-
-    delay(100);
 }
 
 /*
