@@ -82,7 +82,7 @@ void GUI_MAN::startScreen() {
     DISP_MAN::draw();
 }
 
-void GUI_MAN::trackingScreen(int hours, int minutes, float latitude, float longitude, int kmTraveled, bool paused) {
+void GUI_MAN::trackingScreen(int hours, int minutes, float latitude, float longitude, bool paused) {
     clearMainScreen();
     char lat[20];
     char lon[20];
@@ -90,7 +90,7 @@ void GUI_MAN::trackingScreen(int hours, int minutes, float latitude, float longi
     dtostrf(latitude, 1, 4, lat);
 
     char buffer[150];
-    sprintf(buffer, "Tracking in progress\nDuration: %d:%.2d\nDistance: %d km\n%sN %sE", hours, minutes % 100, kmTraveled, lat, lon);
+    sprintf(buffer, "Tracking in progress\nDuration: %d:%.2d\n%sN %sE", hours, minutes % 100, lat, lon);
     DISP_MAN::printText(buffer, 3, 15);
     if(!paused) DISP_MAN::printText("Press 1 to pause", 3, 55);
     else DISP_MAN::printText("Press 1 to unpause\nPress 2 to stop", 3, 47);
@@ -98,10 +98,10 @@ void GUI_MAN::trackingScreen(int hours, int minutes, float latitude, float longi
     DISP_MAN::draw();
 }
 
-void GUI_MAN::endScreen(int hours, int minutes, int kmTraveled) {
+void GUI_MAN::endScreen(int hours, int minutes) {
     clearMainScreen();
     char buffer[150];
-    sprintf(buffer, "Tracking finished!\nDuration: %d:%.2d\nDistance: %d km\n\nPress 1 to start\ntracking a new route", hours, minutes % 100, kmTraveled);
+    sprintf(buffer, "Tracking finished!\nDuration: %d:%.2d\n\n\nPress 1 to start\ntracking a new route", hours, minutes % 100);
     DISP_MAN::printText(buffer, 3, 15);
     DISP_MAN::draw();
 }

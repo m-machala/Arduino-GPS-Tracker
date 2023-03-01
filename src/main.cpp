@@ -14,6 +14,10 @@ State state = STARTING;
 unsigned long timer = 0;
 unsigned long minutesSinceStart = 0;
 int lastMinutes = 0;
+int kmTraveled = 0;
+int meters = 0;
+float lastLat = 0;
+float lastLon = 0;
 char creator[] = "Martin Machala - https://github.com/m-machala";
 
 void setup() {
@@ -63,7 +67,11 @@ void loop() {
                         systemError();
                     }
                     minutesSinceStart = 0;
+                    meters = 0;
+                    kmTraveled = 0;
                     lastMinutes = GPS_MAN::getMinute() + (GPS_MAN::getHour() * 60);
+                    lastLat = GPS_MAN::getLat();
+                    lastLon = GPS_MAN::getLon();
                     state = TRACKING;
                 }
             }
@@ -91,13 +99,24 @@ void loop() {
             
             if(newData && GPS_MAN::fix()) {
                 POS_LOG::addTrackpoint(GPS_MAN::getLon(), GPS_MAN::getLat(), GPS_MAN::getAlt(), GPS_MAN::getYear(), GPS_MAN::getMonth(), GPS_MAN::getDay(), GPS_MAN::getHour(), GPS_MAN::getMinute(), GPS_MAN::getSecond());
+                GUI_MAN::trackingScreen(minutesSinceStart / 60, minutesSinceStart % 60, GPS_MAN::getLat(), GPS_MAN::getLon(), false);
             }
-
-            if(readButton(BTN1)) state = WAITING;
-
+            if(readButton(BTN1)) {
+                GUI_MAN::trackingScreen(minutesSinceStart / 60, minutesSinceStart % 60, GPS_MAN::getLat(), GPS_MAN::getLon(), true);
+                state = WAITING;
+            } 
             break;
 
         case WAITING:
+            lastMinutes = GPS_MAN::getMinute() + (GPS_MAN::getHour() * 60);
+
+            if(readButton(BTN1)) {
+                state = TRACKING;
+            }
+
+            if(readButton(BTN2)) {
+                state = ENDING;
+            }
             break;
 
         case ENDING:

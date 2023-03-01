@@ -50,12 +50,12 @@ namespace GUI_MAN {
   /*
     displays screen with info about the current tracking session
   */
-  void trackingScreen(int hours, int minutes, float latitude, float longitude, int kmTraveled, bool paused);
+  void trackingScreen(int hours, int minutes, float latitude, float longitude, bool paused);
 
   /*
     displays screen with stats ebout ended session
   */
-  void endScreen(int hours, int minutes, int kmTraveled);
+  void endScreen(int hours, int minutes);
 }
 
 #endif //GUI_MAN_H  
