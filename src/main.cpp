@@ -8,6 +8,9 @@
 
 void systemError();
 
+enum State { STARTING, TRACKING, WAITING, ENDING };
+State state = STARTING;
+
 void setup() {
     if(!GUI_MAN::init()) systemError(); // initialize display, if there is an error, blink LED
     GUI_MAN::splash(); // show project splash screen
@@ -24,23 +27,39 @@ void setup() {
         systemError();
     }
 
+    // init buttons
     pinMode(BTN1, INPUT_PULLUP);
     pinMode(BTN2, INPUT_PULLUP);
 }
 
 void loop() {
+    switch(state) {
+        case STARTING:
+            break;
 
+        case TRACKING:
+            break;
+
+        case WAITING:
+            break;
+
+        case ENDING:
+            break;
+
+        default:
+            break;
+    }
 }
 
 /*
-    blinks the built-in led forever
+    blinks built-in led forever
 */
 void systemError() {
     pinMode(LED_BUILTIN, OUTPUT);
     while(true) {
             digitalWrite(LED_BUILTIN, HIGH);
-            delay(1000);
+            delay(2000);
             digitalWrite(LED_BUILTIN, LOW);
-            delay(1000);
+            delay(2000);
         }
 }
