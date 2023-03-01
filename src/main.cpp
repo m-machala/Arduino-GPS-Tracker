@@ -26,8 +26,6 @@ bool btn2CurrentState = false;
 char creator[] = "Martin Machala - https://github.com/m-machala";
 
 void setup() {
-    Serial.begin(115200);
-    Serial.println("debugging");
     if(!GUI_MAN::init()) systemError(); // initialize display, if there is an error, blink LED
     GUI_MAN::splash(); // show project splash screen
     delay(5000);
