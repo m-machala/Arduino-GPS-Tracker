@@ -86,7 +86,7 @@ void loop() {
             break;
 
         // tests if new data is available and if fix is available; if yes, log new data
-        case TRACKING:
+        case TRACKING: {
             int currentMinutes = GPS_MAN::getMinute() + (GPS_MAN::getHour() * 60);
             if(lastMinutes < currentMinutes) {
                 minutesSinceStart = currentMinutes - lastMinutes;
@@ -106,10 +106,10 @@ void loop() {
                 state = WAITING;
             } 
             break;
+        }   
 
         // stop tracking, wait until button is pressed to go back to start screen
         case WAITING:
-
             if(readButton(BTN1)) {
                 lastMinutes = GPS_MAN::getMinute() + (GPS_MAN::getHour() * 60);
                 state = TRACKING;
