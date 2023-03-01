@@ -12,6 +12,8 @@ bool readButton(int button);
 enum State { STARTING, NOFIX, TRACKING, WAITING, ENDING };
 State state = STARTING;
 unsigned long timer = 0;
+unsigned long minutesSinceStart = 0;
+int lastMinutes = 0;
 char creator[] = "Martin Machala - https://github.com/m-machala";
 
 void setup() {
@@ -38,10 +40,12 @@ void setup() {
 }
 
 void loop() {
-    GPS_MAN::update();
-    GUI_MAN::time(GPS_MAN::getHour(), GPS_MAN::getMinute());
-    GUI_MAN::date(GPS_MAN::getYear(), GPS_MAN::getMonth(), GPS_MAN::getSecond());
-    GUI_MAN::satCount(GPS_MAN::getSats());
+    bool newData = GPS_MAN::update();
+    if(newData) {
+        GUI_MAN::time(GPS_MAN::getHour(), GPS_MAN::getMinute());
+        GUI_MAN::date(GPS_MAN::getYear(), GPS_MAN::getMonth(), GPS_MAN::getSecond());
+        GUI_MAN::satCount(GPS_MAN::getSats());
+    }
 
     switch(state) {
         // starting info screen, tests for a button press, if there is no data, show an info screen
@@ -58,6 +62,8 @@ void loop() {
                         GUI_MAN::errorMessage("SD error!");
                         systemError();
                     }
+                    minutesSinceStart = 0;
+                    lastMinutes = GPS_MAN::getMinute() + (GPS_MAN::getHour() * 60);
                     state = TRACKING;
                 }
             }
@@ -71,7 +77,24 @@ void loop() {
             }
             break;
 
+        // tests if new data is available and if fix is available; if yes, log new data
         case TRACKING:
+            int currentMinutes = GPS_MAN::getMinute() + (GPS_MAN::getHour() * 60);
+            if(lastMinutes < currentMinutes) {
+                minutesSinceStart = currentMinutes - lastMinutes;
+            }
+            else if(lastMinutes > 1000 && currentMinutes < 500) {
+                int modifiedMinutes = lastMinutes + 1440; // 60 * 24
+                minutesSinceStart = modifiedMinutes - lastMinutes;
+            }
+            lastMinutes = currentMinutes;
+            
+            if(newData && GPS_MAN::fix()) {
+                POS_LOG::addTrackpoint(GPS_MAN::getLon(), GPS_MAN::getLat(), GPS_MAN::getAlt(), GPS_MAN::getYear(), GPS_MAN::getMonth(), GPS_MAN::getDay(), GPS_MAN::getHour(), GPS_MAN::getMinute(), GPS_MAN::getSecond());
+            }
+
+            if(readButton(BTN1)) state = WAITING;
+
             break;
 
         case WAITING:
