@@ -44,3 +44,27 @@ float GPS_MAN::getLat() {
 float GPS_MAN::getAlt() {
     return GPS.altitude;
 }
+
+int GPS_MAN::getHour() {
+    return GPS.hour;
+}
+
+int GPS_MAN::getMinute() {
+    return GPS.minute;
+}
+
+int GPS_MAN::getSecond() {
+    return GPS.seconds;
+}
+
+int GPS_MAN::getYear() {
+    return GPS.year;
+}
+
+int GPS_MAN::getMonth() {
+    return GPS.month;
+}
+
+int GPS_MAN::getDay() {
+    return GPS.day;
+}

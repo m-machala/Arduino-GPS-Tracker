@@ -18,37 +18,67 @@ namespace GPS_MAN {
   */
   bool init();
 
-   /*
-     update GPS data
-     true - new data available
-     false - no new data available
-   */
-   bool update();
+  /*
+    update GPS data
+    true - new data available
+    false - no new data available
+  */
+  bool update();
 
   /*
     get the fix property
   */
-   bool fix();
+  bool fix();
 
-   /*
-     get number of satellites the module is communicating with
-   */
-   int getSats();
+  /*
+    get number of satellites the module is communicating with
+  */
+  int getSats();
 
-   /*
-     get longitude of GPS
-   */
-   float getLon();
+  /*
+    get longitude of GPS
+  */
+  float getLon();
 
-   /*
-     get latitude of GPS
-   */
-   float getLat();
+  /*
+    get latitude of GPS
+  */
+  float getLat();
 
-   /*
-     get altitude of GPS
-   */
-   float getAlt();
+  /*
+    get altitude of GPS
+  */
+  float getAlt();
+
+  /*
+    get current hour
+  */
+  int getHour();
+
+  /*
+    get current minute
+  */
+  int getMinute();
+
+  /*
+    get current second
+  */
+  int getSecond();
+
+  /*
+    get current year (only last two digits)
+  */
+  int getYear();
+
+  /*
+    get current month
+  */
+  int getMonth();
+
+  /*
+    get current day
+  */
+  int getDay();
 }
 
-#endif //GPS_H  
+#endif //GPS_MAN_H  
