@@ -34,11 +34,11 @@ int GPS_MAN::getSats() {
 }
 
 float GPS_MAN::getLon() {
-    return GPS.longitude;
+    return GPS.longitude / 100;
 }
 
 float GPS_MAN::getLat() {
-    return GPS.latitude;
+    return GPS.latitude / 100;
 }
 
 float GPS_MAN::getAlt() {
