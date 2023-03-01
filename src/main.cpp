@@ -19,6 +19,10 @@ int kmTraveled = 0;
 int meters = 0;
 float lastLat = 0;
 float lastLon = 0;
+bool btn1OldState = false;
+bool btn1CurrentState = false;
+bool btn2OldState = false;
+bool btn2CurrentState = false;
 char creator[] = "Martin Machala - https://github.com/m-machala";
 
 void setup() {
@@ -54,11 +58,12 @@ void loop() {
         GUI_MAN::satCount(GPS_MAN::getSats());
     }
 
+
     if(millis() - timer >= 100) {
         switch(state) {
             // starting info screen, tests for a button press, if there is no data, show an info screen
             case STARTING:
-                if(readButton(BTN1)) {
+                if(btn1CurrentState) {
                     // give an info message in case of no GPS data available
                     if(!GPS_MAN::fix()) {
                         waitTimer = millis();
@@ -78,7 +83,6 @@ void loop() {
                         lastLon = GPS_MAN::getLon();
                         state = TRACKING;
                     }
-                    delay(100);
                 }
                 break;
 
@@ -87,7 +91,6 @@ void loop() {
                 if(millis() - waitTimer >= 5000) {
                     state = STARTING;
                     GUI_MAN::startScreen();
-                    delay(10);
                 }
                 break;
 
@@ -107,39 +110,50 @@ void loop() {
                     POS_LOG::addTrackpoint(GPS_MAN::getLat(), GPS_MAN::getLon(), GPS_MAN::getAlt(), GPS_MAN::getYear(), GPS_MAN::getMonth(), GPS_MAN::getDay(), GPS_MAN::getHour(), GPS_MAN::getMinute(), GPS_MAN::getSecond());
                     GUI_MAN::trackingScreen(minutesSinceStart / 60, minutesSinceStart % 60, GPS_MAN::getLat(), GPS_MAN::getLon(), false);
                 }
-                if(readButton(BTN1)) {
+                if(btn1CurrentState) {
                     GUI_MAN::trackingScreen(minutesSinceStart / 60, minutesSinceStart % 60, GPS_MAN::getLat(), GPS_MAN::getLon(), true);
                     state = WAITING;
-                    delay(100);
                 } 
                 break;
             }   
 
             // stop tracking, wait until button is pressed to go back to start screen
             case WAITING:
-                if(readButton(BTN1)) {
+                if(btn1CurrentState) {
                     lastMinutes = GPS_MAN::getMinute() + (GPS_MAN::getHour() * 60);
                     state = TRACKING;
-                    delay(100);
                 }
 
-                if(readButton(BTN2)) {
+                if(btn2CurrentState) {
                     GUI_MAN::endScreen(minutesSinceStart / 60, minutesSinceStart % 60);
                     state = ENDING;
-                    delay(100);
                 }
                 break;
 
             case ENDING:
-                if(readButton(BTN1)) state = STARTING;
-                delay(100);
+                if(btn1CurrentState) state = STARTING;
+                GUI_MAN::startScreen();
                 break;
 
             default:
                 break;
         }
         timer = millis();
+        if(btn1CurrentState) {
+            btn1OldState = true;
+            btn1CurrentState = false;
+        }
+        if(btn2CurrentState) {
+            btn2OldState = true;
+            btn2CurrentState = false;
+        }
     }
+
+    if(!btn1OldState && readButton(BTN1)) btn1CurrentState = true;
+    if(btn1OldState && !readButton(BTN1)) btn1OldState = false;
+
+    if(!btn2OldState && readButton(BTN2)) btn2CurrentState = true;
+    if(btn2OldState && !readButton(BTN1)) btn2OldState = false;
 }
 
 /*
@@ -149,9 +163,9 @@ void systemError() {
     pinMode(LED_BUILTIN, OUTPUT);
     while(true) {
             digitalWrite(LED_BUILTIN, HIGH);
-            delay(2000);
+            delay(1000);
             digitalWrite(LED_BUILTIN, LOW);
-            delay(2000);
+            delay(1000);
         }
 }
 
