@@ -33,19 +33,23 @@ int GPS_MAN::getSats() {
     return GPS.satellites;
 }
 
-float GPS_MAN::getLon() {
-    int deg = (int)GPS.longitude / 100;
-    float min = GPS.longitude - (deg * 100);
-
-    float output = deg + (min / 60);
-    return output;
-}
-
 float GPS_MAN::getLat() {
     int deg = (int)GPS.latitude / 100;
     float min = GPS.latitude - (deg * 100);
 
     float output = deg + (min / 60);
+
+    if(GPS.lat == 'S') output *= -1;
+    return output;
+}
+
+float GPS_MAN::getLon() {
+    int deg = (int)GPS.longitude / 100;
+    float min = GPS.longitude - (deg * 100);
+
+    float output = deg + (min / 60);
+
+    if(GPS.lon == 'W') output *= -1;
     return output;
 }
 

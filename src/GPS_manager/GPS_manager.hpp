@@ -34,16 +34,16 @@ namespace GPS_MAN {
     get number of satellites the module is communicating with
   */
   int getSats();
+  
+  /*
+    get latitude of GPS
+  */
+  float getLat();
 
   /*
     get longitude of GPS
   */
   float getLon();
-
-  /*
-    get latitude of GPS
-  */
-  float getLat();
 
   /*
     get altitude of GPS
