@@ -7,9 +7,11 @@
 #define BTN2 (31)
 
 void systemError();
+bool readButton(int button);
 
-enum State { STARTING, TRACKING, WAITING, ENDING };
+enum State { STARTING, NOFIX, TRACKING, WAITING, ENDING };
 State state = STARTING;
+unsigned long timer = 0;
 
 void setup() {
     if(!GUI_MAN::init()) systemError(); // initialize display, if there is an error, blink LED
@@ -30,11 +32,42 @@ void setup() {
     // init buttons
     pinMode(BTN1, INPUT_PULLUP);
     pinMode(BTN2, INPUT_PULLUP);
+
+    GUI_MAN::startScreen();
 }
 
 void loop() {
+    GPS_MAN::update();
+    GUI_MAN::time(GPS_MAN::getHour(), GPS_MAN::getMinute());
+    GUI_MAN::date(GPS_MAN::getYear(), GPS_MAN::getMonth(), GPS_MAN::getSecond());
+    GUI_MAN::satCount(GPS_MAN::getSats());
+
     switch(state) {
+        // starting info screen, tests for a button press, if there is no data, show an info screen
         case STARTING:
+            if(readButton(BTN1)) {
+                // give an info message in case of no GPS data available
+                if(!GPS_MAN::fix()) {
+                    timer = millis();
+                    state = NOFIX;
+                    GUI_MAN::infoMessage("No GPS signal!\nPlease wait,\nthen try again");
+                }
+                else {
+                    if(!POS_LOG::startLogging()) {
+                        GUI_MAN::errorMessage("SD error!");
+                        systemError();
+                    }
+                    state = TRACKING;
+                }
+            }
+            break;
+
+        // waits for 5 seconds, then goes back to STARTING
+        case NOFIX:
+            if(millis() - timer >= 5000) {
+                state = STARTING;
+                GUI_MAN::startScreen();
+            }
             break;
 
         case TRACKING:
@@ -49,6 +82,8 @@ void loop() {
         default:
             break;
     }
+
+    delay(100);
 }
 
 /*
@@ -62,4 +97,18 @@ void systemError() {
             digitalWrite(LED_BUILTIN, LOW);
             delay(2000);
         }
+}
+
+/*
+    reads the state of a given button
+    true - button is pressed
+    false - button is not pressed
+*/
+bool readButton(int button) {
+    if(digitalRead(button) == LOW) {
+        // debounce
+        delay(10);
+        if(digitalRead(button) == LOW) return true;
+    }
+    return false;
 }
