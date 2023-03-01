@@ -107,19 +107,22 @@ void loop() {
             } 
             break;
 
+        // stop tracking, wait until button is pressed to go back to start screen
         case WAITING:
-            lastMinutes = GPS_MAN::getMinute() + (GPS_MAN::getHour() * 60);
 
             if(readButton(BTN1)) {
+                lastMinutes = GPS_MAN::getMinute() + (GPS_MAN::getHour() * 60);
                 state = TRACKING;
             }
 
             if(readButton(BTN2)) {
+                GUI_MAN::endScreen(minutesSinceStart / 60, minutesSinceStart % 60);
                 state = ENDING;
             }
             break;
 
         case ENDING:
+            if(readButton(BTN1)) state = STARTING;
             break;
 
         default:

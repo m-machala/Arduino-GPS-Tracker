@@ -101,7 +101,7 @@ void GUI_MAN::trackingScreen(int hours, int minutes, float latitude, float longi
 void GUI_MAN::endScreen(int hours, int minutes) {
     clearMainScreen();
     char buffer[150];
-    sprintf(buffer, "Tracking finished!\nDuration: %d:%.2d\n\n\nPress 1 to start\ntracking a new route", hours, minutes % 100);
+    sprintf(buffer, "Tracking finished!\nDuration: %d:%.2d\n\n\nPress 1 to go\nback to start", hours, minutes % 100);
     DISP_MAN::printText(buffer, 3, 15);
     DISP_MAN::draw();
 }
