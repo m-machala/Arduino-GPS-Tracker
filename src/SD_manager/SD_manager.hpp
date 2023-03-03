@@ -2,12 +2,13 @@
 #define GUI_MAN_H
 
 #include <SPI.h>
-#include <SD.h>
+#include <SdFat.h>
 
 /*
     Current file that is being worked with
 */
 static File currentFile;
+static SdFat SD;
 
 namespace SD_MAN {
     /*
