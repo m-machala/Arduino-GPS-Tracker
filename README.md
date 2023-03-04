@@ -4,6 +4,8 @@ This is a PlatformIO-based Arduino project used for recording data received from
 The data is saved to an SD card in the .gpx format, allowing for easy imports into other apps. 
 The project also uses a display to show real-time tracking info.
 
+## Info
+This project is still work in progress, there are a few bugs that I still need to take care of. But tracking should work properly right now.
 
 ## Components
 This project is specifically made for the Arduino Mega 2560. With minor changes to the code, it should work on other boards as well.
