@@ -68,5 +68,9 @@ void DISP_MAN::drawRect(int x, int y, int w, int h) {
 }
 
 void DISP_MAN::drawBM(int x, int y, int w, int h, const uint8_t* bitmap) {
+    if(x < 0) x = 0;
+    if(x >= X_MAX) x = X_MAX - 1;
+    if(y < 0) y = 0;
+    if(y >= Y_MAX) y = Y_MAX - 1;
     display->drawBitmap(x, y, bitmap, w, h, SH110X_WHITE);
 }

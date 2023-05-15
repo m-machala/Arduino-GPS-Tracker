@@ -96,13 +96,14 @@ void loop() {
             case TRACKING: {
                 int currentMinutes = GPS_MAN::getMinute() + (GPS_MAN::getHour() * 60);
                 if(lastMinutes < currentMinutes) {
-                    minutesSinceStart = currentMinutes - lastMinutes;
+                    minutesSinceStart += currentMinutes - lastMinutes;
+                    lastMinutes = currentMinutes;
                 }
-                else if(lastMinutes > 1000 && currentMinutes < 500) {
-                    int modifiedMinutes = lastMinutes + 1440; // 60 * 24
-                    minutesSinceStart = modifiedMinutes - lastMinutes;
+                else if(currentMinutes - lastMinutes < 0) { // happens when a new day starts in the middle of tracking
+                    int modifiedMinutes = currentMinutes + 1440; // 60 * 24
+                    minutesSinceStart += modifiedMinutes - lastMinutes;
+                    lastMinutes = currentMinutes;
                 }
-                lastMinutes = currentMinutes;
 
                 if(newData && GPS_MAN::fix()) {
                     POS_LOG::addTrackpoint(GPS_MAN::getLat(), GPS_MAN::getLon(), GPS_MAN::getAlt(), GPS_MAN::getYear(), GPS_MAN::getMonth(), GPS_MAN::getDay(), GPS_MAN::getHour(), GPS_MAN::getMinute(), GPS_MAN::getSecond());
@@ -120,10 +121,12 @@ void loop() {
                 if(btn1CurrentState) {
                     lastMinutes = GPS_MAN::getMinute() + (GPS_MAN::getHour() * 60);
                     state = TRACKING;
+                    break;
                 }
 
                 if(btn2CurrentState) {
                     GUI_MAN::endScreen(minutesSinceStart / 60, minutesSinceStart % 60);
+                    POS_LOG::stopLogging();
                     state = ENDING;
                 }
                 break;

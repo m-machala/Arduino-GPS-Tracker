@@ -55,4 +55,5 @@ bool POS_LOG::addTrackpoint(float latitude, float longitude, float elevation, in
 
 void POS_LOG::stopLogging() {
     SD_MAN::fileClose();
+    seekBackValue = 0;
 }
